@@ -16,10 +16,10 @@ public:
         data = 0;
         next = NULL;
     }
-    Node(int k, int d)
+    Node(int key, int data)
     {
-        key = k;
-        data = d;
+        this->key = key;
+        this->data = data;
     }
 };
 
@@ -129,7 +129,10 @@ public:
         {
             if (head->key == k)
             {
-                head = head->next;
+                Node *temp = head->next;
+                delete head;
+                head = temp;
+                cout << "Node Deleted" << endl;
             }
             else
             {
@@ -152,6 +155,7 @@ public:
                 if (temp != NULL)
                 {
                     prevptr->next = temp->next;
+                    delete temp;
                     cout << "Node Deleted" << endl;
                 }
                 else
@@ -267,7 +271,7 @@ int main()
             break;
 
         case 7:
-            system("cls");
+            system("clear");
             break;
 
         default:
