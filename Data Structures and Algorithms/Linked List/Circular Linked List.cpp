@@ -32,18 +32,17 @@ public:
     {
         head = NULL;
     }
-
     CircularLinkedList(Node *n)
     {
         head = n;
         n->next = head;
     }
 
-    Node *nodeExists(int k)
+    Node *NodeExists(int key)
     {
         Node *temp = NULL;
         Node *ptr = head;
-        if (ptr == NULL) // This basically means that head is storing null value that is there is not node present in the linked list
+        if (ptr == NULL)
         {
             return temp;
         }
@@ -51,7 +50,7 @@ public:
         {
             do
             {
-                if (ptr->key == k)
+                if (ptr->key == key)
                 {
                     temp = ptr;
                 }
@@ -61,19 +60,48 @@ public:
         }
     }
 
-    void appendNode(Node *n)
+    void AppendNode(Node *n)
     {
-        if (nodeExists(n->key) != NULL)
+        if (head == NULL)
         {
-            cout << "Node already exists with the key value: " << n->key << endl;
+            head = n;
+            n->next = head;
+            cout << "Node Appended" << endl;
         }
         else
         {
-            if (head == NULL)
+            if (NodeExists(n->key) != NULL)
             {
-                head = n;
+                cout << "Node already exists with the key value of " << n->key << endl;
+            }
+            else
+            {
+                Node *ptr = head;
+                while (ptr->next != head)
+                {
+                    ptr = ptr->next;
+                }
+
+                ptr->next = n;
                 n->next = head;
                 cout << "Node Appended" << endl;
+            }
+        }
+    }
+
+    void PrependNode(Node *n)
+    {
+        if (head == NULL)
+        {
+            head = n;
+            n->next = head;
+            cout << "Node prepended" << endl;
+        }
+        else
+        {
+            if (NodeExists(n->key) != NULL)
+            {
+                cout << "Node already exists with the key value of " << n->key << endl;
             }
             else
             {
@@ -84,46 +112,28 @@ public:
                 }
                 ptr->next = n;
                 n->next = head;
-                cout << "Node Appended" << endl;
+                head = n;
+                cout << "Node Prepended" << endl;
             }
         }
     }
 
-    void prependNode(Node *n)
+    void InsertNodeAfter(Node *n, int key)
     {
-        if (nodeExists(n->key) != NULL)
-        {
-            cout << "Node already exists with the key value: " << n->key << endl;
-        }
-        else
-        {
-            Node *ptr = head;
-            while (ptr->next != head)
-            {
-                ptr = ptr->next;
-            }
-            ptr->next = n;
-            n->next = head;
-            head = n;
-            cout << "Node Prepended" << endl;
-        }
-    }
-
-    void insertNodeAfter(int k, Node *n)
-    {
-        Node *ptr = nodeExists(k);
+        Node *ptr = NodeExists(key);
         if (ptr == NULL)
         {
-            cout << "No Node exists with the key value: " << k << endl;
+            cout << "No node exists with the key value of " << key << endl;
         }
         else
         {
-            if (nodeExists(n->key) != NULL)
+            if (NodeExists(n->key) != NULL)
             {
-                cout << "Node already exits with the key value: " << n->key << endl;
+                cout << "Node already exists with the key value of " << n->key << endl;
             }
             else
             {
+
                 if (ptr->next == head)
                 {
                     ptr->next = n;
@@ -140,21 +150,69 @@ public:
         }
     }
 
-    void deleteNodeByKey(int k)
+    void InsertNodeBefore(Node *n, int key)
     {
-        Node *ptr = nodeExists(k);
+        Node *ptr = NodeExists(key);
         if (ptr == NULL)
         {
-            cout << "No Node exists with the key value: " << k << endl;  
+            cout << "No node exists with the key value of " << key << endl;
         }
         else
         {
             if (ptr == head)
             {
+                Node *temp = head;
+                while (temp->next != head)
+                {
+                    temp = temp->next;
+                }
+                temp->next = n;
+                n->next = head;
+                head = n;
+                cout << "Node Inserted at the Beginning" << endl;
+            }
+            else
+            {
+                Node *prev_ptr = head;
+                Node *curr_ptr = prev_ptr->next;
+
+                while (curr_ptr != head)
+                {
+                    if (curr_ptr->key == key)
+                    {
+                        break;
+                    }
+                    prev_ptr = prev_ptr->next;
+                    curr_ptr = curr_ptr->next;
+                }
+                if (NodeExists(n->key) != NULL)
+                {
+                    cout << "Node already exists with the key value of " << n->key << endl;
+                }
+                else
+                {
+                    n->next = prev_ptr->next;
+                    prev_ptr->next = n;
+                    cout << "Node Inserted in Between" << endl;
+                }
+            }
+        }
+    }
+
+    void DeleteNodeByKey(int key)
+    {
+        if (head == NULL)
+        {
+            cout << "No nodes in the linked list" << endl;
+        }
+        else
+        {
+            if (head->key == key)
+            {
                 if (head->next == head)
                 {
                     head = NULL;
-                    cout << "Node UNLINKED" << endl;
+                    cout << "Node Deleted from Beginning" << endl;
                 }
                 else
                 {
@@ -165,64 +223,60 @@ public:
                     }
                     ptr->next = head->next;
                     head = head->next;
-                    cout << "Node UNLINKED" << endl;
+                    cout << "Node Deleted from Beginning" << endl;
                 }
             }
             else
             {
                 Node *temp = NULL;
                 Node *prev_ptr = head;
-                Node *currentptr = prev_ptr->next;
+                Node *curr_ptr = prev_ptr->next;
 
-                while (currentptr != NULL)
+                while (curr_ptr != head)
                 {
-                    if (currentptr->key == k)
+                    if (curr_ptr->key == key)
                     {
-                        temp = currentptr;
-                        currentptr = NULL;
+                        temp = curr_ptr;
+                        break;
                     }
-                    else
-                    {
-                        prev_ptr = prev_ptr->next;
-                        currentptr = currentptr->next;
-                    }
+                    prev_ptr = prev_ptr->next;
+                    curr_ptr = curr_ptr->next;
                 }
-                prev_ptr->next = temp->next;
-                cout << "Node UNLINKED" << endl;
+                if (temp != NULL)
+                {
+                    prev_ptr->next = temp->next;
+                    cout << "Node Deleted" << endl;
+                }
+                else
+                {
+                    cout << "No node exists with the key value of " << key << endl;
+                }
             }
         }
     }
-    void updateNodeByKey(int k, int d)
+
+    void UpdateNodeByKey(int key, int value)
     {
-        Node *ptr = nodeExists(k);
+        Node *ptr = NodeExists(key);
         if (ptr != NULL)
         {
-            ptr->data = d;
+            ptr->data = value;
             cout << "Node Updated" << endl;
         }
         else
         {
-            cout << "No Node exists with the key value: " << k << endl;
+            cout << "No node exists with the key value of " << key << endl;
         }
     }
 
-    void printList()
+    void PrintList()
     {
-        if (head == NULL)
+        Node *ptr = head;
+        do
         {
-            cout << "Circular Linked List is Empty" << endl;
-        }
-        else
-        {
-            cout << endl
-                 << "Circular Linked List Values : ";
-            Node *temp = head;
-            do
-            {
-                cout << "(" << temp->key << "," << temp->data << "," << temp->next << ") --> ";
-                temp = temp->next;
-            } while (temp != head);
-        }
+            cout << "(" << ptr->key << ", " << ptr->data << ", " << ptr->next << ") --> ";
+            ptr = ptr->next;
+        } while (ptr != head);
     }
 };
 
@@ -238,10 +292,11 @@ int main()
         cout << "1. appendNode()" << endl;
         cout << "2. prependNode()" << endl;
         cout << "3. insertNodeAfter()" << endl;
-        cout << "4. deleteNodeByKey()" << endl;
-        cout << "5. updateNodeByKey()" << endl;
-        cout << "6. print()" << endl;
-        cout << "7. Clear Screen" << endl
+        cout << "4. insertNodeBefore()" << endl;
+        cout << "5. deleteNodeByKey()" << endl;
+        cout << "6. updateNodeByKey()" << endl;
+        cout << "7. print()" << endl;
+        cout << "8. Clear Screen" << endl
              << endl;
 
         cin >> option;
@@ -258,7 +313,7 @@ int main()
             cin >> data1;
             n1->key = key1;
             n1->data = data1;
-            obj.appendNode(n1);
+            obj.AppendNode(n1);
             // cout<<n1.key<<" = "<<n1.data<<endl;
             break;
 
@@ -268,7 +323,7 @@ int main()
             cin >> data1;
             n1->key = key1;
             n1->data = data1;
-            obj.prependNode(n1);
+            obj.PrependNode(n1);
             break;
 
         case 3:
@@ -280,29 +335,41 @@ int main()
             n1->key = key1;
             n1->data = data1;
 
-            obj.insertNodeAfter(k1, n1);
+            obj.InsertNodeAfter(n1, k1);
             break;
 
         case 4:
+            cout << "Insert Node After Operation \nEnter key of existing Node after which you want to Insert this New node: " << endl;
+            cin >> k1;
+            cout << "Enter key & data of the New Node first: " << endl;
+            cin >> key1;
+            cin >> data1;
+            n1->key = key1;
+            n1->data = data1;
+
+            obj.InsertNodeBefore(n1, k1);
+            break;
+
+        case 5:
 
             cout << "Delete Node By Key Operation - \nEnter key of the Node to be deleted: " << endl;
             cin >> k1;
-            obj.deleteNodeByKey(k1);
-
-            break;
-        case 5:
-            cout << "Update Node By Key Operation - \nEnter key & NEW data to be updated" << endl;
-            cin >> key1;
-            cin >> data1;
-            obj.updateNodeByKey(key1, data1);
+            obj.DeleteNodeByKey(k1);
 
             break;
         case 6:
-            obj.printList();
+            cout << "Update Node By Key Operation - \nEnter key & NEW data to be updated" << endl;
+            cin >> key1;
+            cin >> data1;
+            obj.UpdateNodeByKey(key1, data1);
 
             break;
         case 7:
-            system("cls");
+            obj.PrependNode(n1);
+
+            break;
+        case 8:
+            system("clear");
             break;
         default:
             cout << "Enter Proper Option number " << endl;
