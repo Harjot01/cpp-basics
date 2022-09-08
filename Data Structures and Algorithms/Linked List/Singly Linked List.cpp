@@ -97,7 +97,7 @@ public:
         }
     }
 
-    void insertNodeAfter(int k, Node *n)
+    void insertNodeAfter(Node *n, int k)
     {
         Node *ptr = nodeExists(k);
         if (ptr == NULL)
@@ -116,6 +116,52 @@ public:
                 ptr->next = n;
                 cout << "Node Inserted" << endl;
             }
+        }
+    }
+
+    void insertNodeBefore(Node *n, int key)
+    {
+        Node *ptr = nodeExists(key);
+        if (ptr != NULL)
+        {
+            if (ptr == head)
+            {
+                n->next = head;
+                head = n;
+                cout << "Node Inserted at the beginning" << endl;
+            }
+            else
+            {
+
+                Node *prev_ptr = head;
+                Node *curr_ptr = prev_ptr->next;
+                while (curr_ptr != NULL)
+                {
+                    if (curr_ptr->key == key)
+                    {
+                        curr_ptr = NULL;
+                    }
+                    else
+                    {
+                        prev_ptr = prev_ptr->next;
+                        curr_ptr = curr_ptr->next;
+                    }
+                }
+                if (nodeExists(n->key) != NULL)
+                {
+                    cout << "Node already exists with the key value of " << n->key << endl;
+                }
+                else
+                {
+                    n->next = prev_ptr->next;
+                    prev_ptr->next = n;
+                    cout << "Node Inserted" << endl;
+                }
+            }
+        }
+        else
+        {
+            cout << "No node exists with the key value of" << key << endl;
         }
     }
 
@@ -180,6 +226,27 @@ public:
         }
     }
 
+    void selectionSort()
+    {
+        Node *temp = head;
+        while (temp != NULL)
+        {
+            Node *min = temp;
+            Node *next = temp->next;
+            while (next != NULL)
+            {
+                if (next->data < min->data)
+                    min = next;
+                next = next->next;
+            }
+            int value = temp->data;
+            temp->data = min->data;
+            min->data = value;
+
+            temp = temp->next;
+        }
+    }
+
     void printList()
     {
         if (head == NULL)
@@ -211,10 +278,12 @@ int main()
         cout << "1. appendNode()" << endl;
         cout << "2. prependNode()" << endl;
         cout << "3. insertNodeAfter()" << endl;
-        cout << "4. deleteNodeByKey()" << endl;
-        cout << "5. updateNodeByKey()" << endl;
-        cout << "6. Print()" << endl;
-        cout << "7. Clear Screen" << endl
+        cout << "4. insertNodeBefore()" << endl;
+        cout << "5. deleteNodeByKey()" << endl;
+        cout << "6. updateNodeByKey()" << endl;
+        cout << "7. Sorting the List()" << endl;
+        cout << "8. Print()" << endl;
+        cout << "9. Clear Screen" << endl
              << endl;
 
         cin >> option;
@@ -250,27 +319,42 @@ int main()
             cin >> data1;
             n1->key = key1;
             n1->data = data1;
-            s.insertNodeAfter(k1, n1);
+            s.insertNodeAfter(n1, k1);
+            break;
+        case 4:
+            cout << "Insert Node Before Operation \nEnter key of existing Node after which you want to Insert this new node: " << endl;
+            cin >> k1;
+            cout << "Enter key & data of the New Node first: " << endl;
+            cin >> key1;
+            cin >> data1;
+            n1->key = key1;
+            n1->data = data1;
+            s.insertNodeBefore(n1, k1);
             break;
 
-        case 4:
+        case 5:
             cout << "Delete Node Operation \nEnter key of the Node to the deleted" << endl;
             cin >> k1;
             s.deleteNodeByKey(k1);
             break;
 
-        case 5:
+        case 6:
             cout << "Update Node By Key Operation \nEnter key & new data to be updated" << endl;
             cin >> key1;
             cin >> data1;
             s.updateNodeByKey(key1, data1);
             break;
 
-        case 6:
+        case 7:
+            cout << "Sorting the Linked List" << endl;
+            s.selectionSort();
+            break;
+
+        case 8:
             s.printList();
             break;
 
-        case 7:
+        case 9:
             system("clear");
             break;
 
